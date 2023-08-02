@@ -1,38 +1,13 @@
-.App {
-  text-align: center;
+/* En tu archivo CSS */
+.products-container {
+  display: grid; /* Puedes cambiar "grid" por "flex" si prefieres una fila en lugar de una cuadrícula */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Cambia el tamaño de columna según tus necesidades */
+  gap: 20px; /* Espacio entre los elementos */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Estilo de cada elemento del inventario */
+.product {
+  border: 1px solid #ccc; /* Borde del recuadro */
+  padding: 20px; /* Espacio interno del recuadro */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
