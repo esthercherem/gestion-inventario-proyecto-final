@@ -15,9 +15,9 @@ const App = () => {
   };
 
   // Función para eliminar un elemento del inventario
-  const handleDeleteItem = (code) => {
-    setItems(items.filter(item => item.code !== code));
-  };
+  // const handleDeleteItem = (code) => {
+  //   setItems(items.filter(item => item.code !== code));
+  // };
 
   return (
     <Router>
@@ -30,7 +30,8 @@ const App = () => {
               path="/inventory"
               element={<Inventory onAddItem={handleAddItem} />}
             />
-            <Route path="/shop" element={<Shop items={items} />} />
+            <Route path="/shop" 
+            element={<Shop items={items}  onAddItem={handleAddItem} />} />
           </Routes>
         </div>
       </div>

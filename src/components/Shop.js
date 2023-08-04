@@ -1,77 +1,96 @@
 import React, { useState } from 'react';
-import AddItemForm from './AddItemForm';
 
-const Shop = () => {
-  const [items, setItems] = useState([]);
+const Shop = ({ items }) => {
+  const [searchText, setSearchText] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [filteredItems, setFilteredItems] = useState(items);
 
-  // Función para agregar un nuevo elemento al inventario
-  const handleAddItem = (newItem) => {
-    setItems([...items, { ...newItem, sold: false }]);
+  const handleTextSearch = () => {
+    const sanitizedSearchText = searchText
+      .toLowerCase()
+      .replace(/[^a-z0-9áéíóúüñ\s]/g, ''); // Eliminar caracteres especiales
+
+    const filtered = items.filter((item) => {
+      for (const key in item) {
+        if (item[key].toString().toLowerCase().includes(sanitizedSearchText)) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    setFilteredItems(filtered);
   };
 
-  // Función para marcar un artículo como vendido
-  const handleMarkAsSold = (index) => {
-    const updatedItems = [...items];
-    updatedItems[index].sold = true;
-    setItems(updatedItems);
+  const handlePriceSearch = () => {
+    const min = parseFloat(minPrice);
+    const max = parseFloat(maxPrice);
+
+    const filtered = items.filter((item) => {
+      const itemPrice = parseFloat(item.price);
+      return itemPrice >= min && itemPrice <= max;
+    });
+
+    setFilteredItems(filtered);
   };
 
-  // Función para editar un artículo
-  const handleEditItem = (index, clienta, precioVenta) => {
-    const updatedItems = [...items];
-    updatedItems[index].clienta = clienta;
-    updatedItems[index].precioVenta = precioVenta;
-    setItems(updatedItems);
-  };
-
-  // Función para borrar un artículo
-  const handleDeleteItem = (index) => {
-    const updatedItems = [...items];
-    updatedItems.splice(index, 1);
-    setItems(updatedItems);
+  const handleClearSearch = () => {
+    setSearchText('');
+    setMinPrice('');
+    setMaxPrice('');
+    setFilteredItems(items);
   };
 
   return (
     <div>
       <h1>Tienda</h1>
-      <AddItemForm onAddItem={handleAddItem} />
-      {items.map((item, index) => (
-        <div key={index} className="product">
-            
-          <h3>Tipo de item: {item.type}</h3>
-          <p>Código: {item.code}</p>
-          <p>Tipo de Oro: {item.goldType}</p>
-          <p>Compañía: {item.company}</p>
-          <p>Costo: {item.cost}</p>
-          <p>Precio: {item.price}</p>
-          <p>Fecha de Compra: {item.purchaseDate}</p>
-          <p>Lugar de Compra: {item.placeOfPurchase}</p>
-          <p>Especificaciones: {item.specifications}</p>
-
-          {/* Mostrar "Vendido" si el artículo está marcado como vendido */}
-          {item.sold && <p>Vendido</p>}
-
-          {/* Mostrar el formulario para editar el artículo */}
-          {!item.sold && (
-            <div>
-              <button onClick={() => handleMarkAsSold(index)}>Vendido</button>
-              <input
-                type="text"
-                value={item.clienta || ''}
-                placeholder="Cliente"
-                onChange={(e) => handleEditItem(index, e.target.value, item.precioVenta)}
-              />
-              <input
-                type="number"
-                value={item.precioVenta || ''}
-                placeholder="Precio de venta"
-                onChange={(e) => handleEditItem(index, item.clienta, e.target.value)}
-              />
-              <button onClick={() => handleDeleteItem(index)}>Borrar</button>
-            </div>
-          )}
-        </div>
-      ))}
+      <div>
+        {/* Buscador de texto */}
+        <input
+          type="text"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          placeholder="Buscar en toda la tienda..."
+        />
+        <button onClick={handleTextSearch}>Buscar Texto</button>
+      </div>
+      <div>
+        {/* Buscador de rango de precios */}
+        <input
+          type="number"
+          value={minPrice}
+          onChange={(e) => setMinPrice(e.target.value)}
+          placeholder="Precio mínimo"
+        />
+        <input
+          type="number"
+          value={maxPrice}
+          onChange={(e) => setMaxPrice(e.target.value)}
+          placeholder="Precio máximo"
+        />
+        <button onClick={handlePriceSearch}>Buscar por Precio</button>
+      </div>
+      <button onClick={handleClearSearch}>Limpiar</button>
+      <div>
+        {/* Contador de objetos renderizados */}
+        <p>Articulos: {filteredItems.length}</p>
+      </div>
+      <div className="products-container">
+        {filteredItems.map((item) => (
+          <div key={item.code} className="product">
+            <h3>Tipo de item: {item.type}</h3>
+            <p>Código: {item.code}</p>
+            <p>Tipo de Oro: {item.goldType}</p>
+            <p>Compañía: {item.company}</p>
+            <p>Costo: {item.cost}</p>
+            <p>Precio: {item.price}</p>
+            <p>Fecha de Compra: {item.purchaseDate}</p>
+            <p>Lugar de Compra: {item.placeOfPurchase}</p>
+            <p>Especificaciones: {item.specifications}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

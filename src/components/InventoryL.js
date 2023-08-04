@@ -1,7 +1,17 @@
-// En src/components/AddItemForm.js
+// En src/components/Inventory.js
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const AddItemForm = ({ onAddItem }) => {
+// const Inventory = ({ onAddItem }) => {
+//   const [items, setItems] = useState([]);
+
+//   // Función para agregar un nuevo elemento al inventario
+//   const handleAddItem = (newItem) => {
+//     setItems([...items, newItem]);
+//   };
+
+
+const Inventory = ({ onAddItem }) => {
     const [company, setCompany] = useState('');
     const [cost, setCost] = useState('');
     const [purchaseDate, setPurchaseDate] = useState('');
@@ -12,47 +22,44 @@ const AddItemForm = ({ onAddItem }) => {
     const [itemType, setItemType] = useState(''); 
     const [placeOfPurchase, setPlaceOfPurchase] = useState(''); 
   
-
     const handleCompanyChange = (e) => {
-        const selectedCompany = e.target.value;
-        setCompany(selectedCompany);
-        updateCode(selectedCompany, cost);
-      };
-    
-      const handleCostChange = (e) => {
-        const costValue = e.target.value;
-        setCost(costValue);
-    
-        // Calculamos el precio multiplicando el costo por 2
-        const calculatedPriceValue = costValue * 2;
-        setCalculatedPrice(calculatedPriceValue);
-    
-        // Actualizamos el código en base a la compañía y el costo
-        updateCode(company, costValue);
+      const selectedCompany = e.target.value;
+      setCompany(selectedCompany);
+      updateCode(selectedCompany, cost);
+    };
   
+    const handleCostChange = (e) => {
+      const costValue = e.target.value;
+      setCost(costValue);
   
-      };
-    
-      const updateCode = (selectedCompany, selectedCost) => {
-        let generatedCode = '';
-        if (selectedCompany === 'param') {
-          generatedCode = `34${selectedCost * 2}-P`;
-        } else if (selectedCompany === 'dina') {
-          generatedCode = `63${selectedCost * 2}-D`;
-        } else if (selectedCompany === 'kine') {
-          generatedCode = `28${selectedCost * 2}-K`;
-        } else if (selectedCompany === 'bat') {
-          generatedCode = `97${selectedCost * 2}-B`;
-        }
-        setCode(generatedCode);
-      };
+      // Calculamos el precio multiplicando el costo por 2
+      const calculatedPriceValue = costValue * 2;
+      setCalculatedPrice(calculatedPriceValue);
+  
+      // Actualizamos el código en base a la compañía y el costo
+      updateCode(company, costValue);
 
 
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newItem = {
-      company,
+    };
+  
+    const updateCode = (selectedCompany, selectedCost) => {
+      let generatedCode = '';
+      if (selectedCompany === 'param') {
+        generatedCode = `34${selectedCost * 2}-P`;
+      } else if (selectedCompany === 'dina') {
+        generatedCode = `63${selectedCost * 2}-D`;
+      } else if (selectedCompany === 'kine') {
+        generatedCode = `28${selectedCost * 2}-K`;
+      } else if (selectedCompany === 'bat') {
+        generatedCode = `97${selectedCost * 2}-B`;
+      }
+      setCode(generatedCode);
+    };
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      const newItem = {
+        company,
         cost,
         price: calculatedPrice,
         purchaseDate,
@@ -61,24 +68,24 @@ const AddItemForm = ({ onAddItem }) => {
         goldType,
         type: itemType,
         placeOfPurchase,
+      };
+      onAddItem(newItem);
+      // Limpiamos el formulario después de enviar los datos
+      setCompany('');
+      setCost('');
+      setPurchaseDate('');
+      setSpecifications('');
+      setCalculatedPrice('');
+      setCode('');
+      setGoldType('');
+      setItemType('');
+      setPlaceOfPurchase('');
     };
-    onAddItem(newItem);
-    // Aquí puedes enviar el newItem al servidor o realizar cualquier otra acción necesaria
-    // Después de enviar los datos, puedes restablecer los valores de los estados para limpiar el formulario.
-    setCompany('');
-    setCost('');
-    setPurchaseDate('');
-    setSpecifications('');
-    setCalculatedPrice('');
-    setCode('');
-    setGoldType('');
-    setItemType('');
-    setPlaceOfPurchase('');
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-     <div className="mb-3">
+  
+    return (
+      
+      <form onSubmit={handleSubmit} >
+          <div className="mb-3">
           <label htmlFor="itemType">Tipo de artículo</label>
           <select
             id="itemType"
@@ -184,10 +191,26 @@ const AddItemForm = ({ onAddItem }) => {
             <option value="MIA">MIA</option>
           </select>
         </div>
-      
-      <button type="submit" className="btn btn-primary">Agregar Elemento</button>
-    </form>
-  );
-};
+       
+    
+        <Link to="/shop" style={{ color: 'white', textDecoration: 'none' }}>
+            <button type="submit" className="btn btn-primary">
+        Agregar Elemento  <handleSubmit onAddItem={onAddItem} /> </button>
 
-export default AddItemForm;
+        </Link>
+      
+          
+       
+      </form>
+    );
+  };
+  
+  export default Inventory;
+  
+
+
+
+
+
+
+
